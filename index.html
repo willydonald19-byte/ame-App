@@ -1396,13 +1396,11 @@ async function sendResetLink(){
   const btn=document.getElementById('btn-fg-send');
   if(btn){btn.disabled=true;btn.textContent='⏳ Envoi en cours...';}
 
-  // Le lien renvoie directement vers ÂME (pas la page générique Firebase)
-  // pour que l'utilisateur choisisse son nouveau mot de passe DANS l'app.
-  const actionCodeSettings={url:appBaseUrl(),handleCodeInApp:true};
-
   try{
     await wFb();
-    await window.__fb.sendPasswordResetEmail(window.__fb.auth,em,actionCodeSettings);
+    // Envoi via le système par défaut de Firebase (fonctionne sans configuration
+    // supplémentaire — le lien ouvre la page de réinitialisation hébergée par Firebase)
+    await window.__fb.sendPasswordResetEmail(window.__fb.auth,em);
     document.getElementById('fg-sent-email').textContent=em;
     document.getElementById('forgot-step1').style.display='none';
     document.getElementById('forgot-step2').style.display='block';
@@ -1426,10 +1424,9 @@ async function sendResetLink(){
 async function resendResetLink(){
   const em=S._lastResetEmail||document.getElementById('fg-email').value.trim();
   if(!em)return;
-  const actionCodeSettings={url:appBaseUrl(),handleCodeInApp:true};
   try{
     await wFb();
-    await window.__fb.sendPasswordResetEmail(window.__fb.auth,em,actionCodeSettings);
+    await window.__fb.sendPasswordResetEmail(window.__fb.auth,em);
     toast('📧','Lien renvoyé !','Vérifie à nouveau ta boîte mail');
   }catch(e){
     toast('📧','Lien renvoyé !','Vérifie à nouveau ta boîte mail');
